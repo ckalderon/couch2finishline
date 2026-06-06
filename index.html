@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Couch2FinishLine — Triathlon & Running Coaching by Cem K</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #0a1628;
+  --navy-mid: #112240;
+  --navy-light: #1a3560;
+  --blue: #1d6fa4;
+  --blue-bright: #2a8fd4;
+  --accent: #e8a020;
+  --accent-light: #f5c05a;
+  --white: #f5f7fa;
+  --muted: #8ca0bc;
+  --text: #c8d8ec;
+  --border: rgba(255,255,255,0.08);
+  --card: rgba(255,255,255,0.04);
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--navy);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ─── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 60px;
+  background: rgba(10,22,40,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px; letter-spacing: 2px;
+  color: var(--white); text-decoration: none;
+}
+.nav-logo span { color: var(--accent); }
+.nav-links { display: flex; gap: 8px; list-style: none; align-items: center; }
+.nav-links a {
+  color: var(--muted); text-decoration: none;
+  font-size: 13px; letter-spacing: 1px;
+  text-transform: uppercase; font-weight: 400;
+  padding: 8px 14px; border-radius: 4px;
+  transition: color 0.2s, background 0.2s;
+  cursor: pointer; user-select: none;
+}
+.nav-links a:hover { color: var(--white); background: rgba(255,255,255,0.05); }
+.nav-links a.active { color: var(--white); }
+
+/* Dropdown */
+.nav-dropdown { position: relative; }
+.nav-dropdown > a { display: flex; align-items: center; gap: 4px; cursor: pointer; user-select: none; }
+.nav-dropdown > a::after { content: '▾'; font-size: 10px; opacity: 0.6; transition: transform 0.2s; }
+.nav-dropdown.open > a::after { transform: rotate(180deg); }
+.dropdown-menu {
+  display: none;
+  position: absolute; top: calc(100% + 4px); left: 0;
+  background: var(--navy-mid);
+  border: 1px solid var(--border);
+  border-radius: 8px; min-width: 210px;
+  overflow: hidden; z-index: 200;
+  padding: 6px;
+}
+.nav-dropdown.open .dropdown-menu { display: block; }
+.dropdown-menu a {
+  display: block; padding: 12px 16px;
+  color: var(--muted); text-decoration: none;
+  font-size: 13px; letter-spacing: 0.5px;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
+  margin-bottom: 2px; cursor: pointer;
+}
+.dropdown-menu a:last-child { margin-bottom: 0; }
+.dropdown-menu a:hover { background: rgba(255,255,255,0.07); color: var(--white); }
+
+.nav-cta {
+  background: var(--accent) !important;
+  color: var(--navy) !important;
+  font-weight: 500 !important;
+  letter-spacing: 1px;
+}
+.nav-cta:hover { background: var(--accent-light) !important; color: var(--navy) !important; }
+
+/* ─── PAGES ─── */
+.page { display: none; min-height: 100vh; padding-top: 80px; }
+.page.active { display: block; }
+
+/* ─── HOME PAGE ─── */
+.hero {
+  min-height: calc(100vh - 80px);
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 80px 60px;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 70% 50%, rgba(29,111,164,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 10% 80%, rgba(232,160,32,0.08) 0%, transparent 50%);
+}
+.hero-grid {
+  position: absolute; inset: 0; opacity: 0.03;
+  background-image: linear-gradient(var(--blue) 1px, transparent 1px), linear-gradient(90deg, var(--blue) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+.hero-tag {
+  font-family: 'DM Mono', monospace; font-size: 12px;
+  letter-spacing: 3px; color: var(--accent);
+  text-transform: uppercase; margin-bottom: 24px; position: relative;
+}
+.hero-tag::before { content: '//'; margin-right: 8px; opacity: 0.5; }
+h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(72px, 10vw, 140px);
+  line-height: 0.92; color: var(--white);
+  position: relative; margin-bottom: 8px;
+}
+h1 em { font-style: normal; color: var(--accent); }
+.hero-sub {
+  font-size: clamp(17px, 2vw, 22px); font-weight: 300;
+  color: var(--muted); margin-bottom: 48px;
+  max-width: 520px; position: relative;
+}
+.hero-actions { display: flex; gap: 16px; flex-wrap: wrap; position: relative; }
+.btn-primary {
+  background: var(--accent); color: var(--navy);
+  padding: 16px 36px; border-radius: 4px;
+  text-decoration: none; font-weight: 500; font-size: 15px;
+  transition: background 0.2s, transform 0.15s; display: inline-block; cursor: pointer; border: none; font-family: 'DM Sans', sans-serif;
+}
+.btn-primary:hover { background: var(--accent-light); transform: translateY(-2px); }
+.btn-secondary {
+  border: 1px solid rgba(255,255,255,0.2); color: var(--white);
+  padding: 16px 36px; border-radius: 4px;
+  text-decoration: none; font-size: 15px;
+  transition: border-color 0.2s, transform 0.15s; display: inline-block; cursor: pointer; background: none; font-family: 'DM Sans', sans-serif;
+}
+.btn-secondary:hover { border-color: rgba(255,255,255,0.5); transform: translateY(-2px); }
+.hero-stats {
+  display: flex; gap: 48px; margin-top: 80px;
+  position: relative; padding-top: 40px;
+  border-top: 1px solid var(--border);
+}
+.stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 42px; color: var(--white); line-height: 1; }
+.stat-num span { color: var(--accent); }
+.stat-label { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+
+/* ─── SECTION COMMONS ─── */
+.page-section { padding: 80px 60px; }
+.page-section.alt { background: var(--navy-mid); }
+.section-tag {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  letter-spacing: 3px; color: var(--accent);
+  text-transform: uppercase; margin-bottom: 16px;
+}
+h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(40px, 5vw, 68px);
+  line-height: 1; color: var(--white); margin-bottom: 20px;
+}
+h3 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(28px, 3vw, 40px);
+  line-height: 1; color: var(--white); margin-bottom: 16px;
+}
+.section-intro {
+  max-width: 580px; font-size: 16px; color: var(--muted);
+  line-height: 1.8; margin-bottom: 56px;
+}
+
+/* ─── ABOUT PAGE ─── */
+.about-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 80px; align-items: start; margin-bottom: 64px;
+}
+.about-badge {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: rgba(232,160,32,0.12);
+  border: 1px solid rgba(232,160,32,0.3);
+  padding: 10px 20px; border-radius: 100px; margin-bottom: 28px;
+}
+.about-badge-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.about-badge-text { font-size: 13px; color: var(--accent); letter-spacing: 1px; }
+.about-text p { color: var(--muted); font-size: 16px; line-height: 1.9; margin-bottom: 20px; }
+.about-visual {
+  background: var(--navy-light); border-radius: 12px;
+  padding: 40px; border: 1px solid var(--border);
+  position: relative; overflow: hidden;
+}
+.about-visual::before {
+  content: ''; position: absolute; top: -40px; right: -40px;
+  width: 200px; height: 200px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(29,111,164,0.3) 0%, transparent 70%);
+}
+.cert-item {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 18px 0; border-bottom: 1px solid var(--border);
+}
+.cert-item:last-child { border-bottom: none; }
+.cert-icon {
+  width: 40px; height: 40px; border-radius: 8px;
+  background: rgba(29,111,164,0.2);
+  border: 1px solid rgba(29,111,164,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.cert-title { font-weight: 500; color: var(--white); font-size: 15px; }
+.cert-sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+/* Steps */
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; margin-top: 16px; }
+.step { position: relative; }
+.step::after {
+  content: '→'; position: absolute; top: 24px; right: -20px;
+  color: var(--border); font-size: 20px;
+}
+.step:last-child::after { display: none; }
+.step-num { font-family: 'Bebas Neue', sans-serif; font-size: 56px; color: rgba(255,255,255,0.04); line-height: 1; margin-bottom: -8px; }
+.step-title { font-size: 15px; font-weight: 500; color: var(--white); margin-bottom: 8px; }
+.step-desc { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+/* ─── PRIVATE COACHING PAGE ─── */
+.packages-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 24px; margin-bottom: 64px;
+}
+.package-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 40px 32px;
+  position: relative; transition: border-color 0.3s, transform 0.2s;
+}
+.package-card:hover { border-color: rgba(42,143,212,0.4); transform: translateY(-4px); }
+.package-card.featured { border-color: var(--accent); background: rgba(232,160,32,0.06); }
+.package-card.featured:hover { border-color: var(--accent-light); }
+.featured-label {
+  position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+  background: var(--accent); color: var(--navy);
+  font-size: 11px; font-weight: 500; letter-spacing: 2px;
+  text-transform: uppercase; padding: 5px 20px;
+  border-radius: 100px; white-space: nowrap;
+}
+.package-sport {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--blue-bright); margin-bottom: 8px;
+}
+.package-name {
+  font-family: 'Bebas Neue', sans-serif; font-size: 30px;
+  color: var(--white); line-height: 1.1; margin-bottom: 4px;
+}
+.package-price {
+  margin: 24px 0; display: flex; align-items: baseline; gap: 4px;
+}
+.price-currency { font-size: 20px; color: var(--muted); align-self: flex-start; margin-top: 8px; }
+.price-num { font-family: 'Bebas Neue', sans-serif; font-size: 52px; color: var(--white); line-height: 1; }
+.price-period { font-size: 14px; color: var(--muted); }
+.package-features { list-style: none; margin: 24px 0 32px; }
+.package-features li {
+  display: flex; align-items: flex-start; gap: 12px;
+  font-size: 14px; color: var(--muted);
+  padding: 8px 0; border-bottom: 1px solid var(--border);
+}
+.package-features li:last-child { border-bottom: none; }
+.check {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: rgba(29,111,164,0.2); border: 1px solid rgba(29,111,164,0.4);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px; font-size: 10px; color: var(--blue-bright);
+}
+.package-card.featured .check { background: rgba(232,160,32,0.15); border-color: rgba(232,160,32,0.4); color: var(--accent); }
+.btn-package {
+  width: 100%; display: block; text-align: center;
+  padding: 14px; border-radius: 6px; text-decoration: none;
+  font-size: 14px; font-weight: 500; letter-spacing: 0.5px;
+  transition: all 0.2s; border: 1px solid rgba(29,111,164,0.4);
+  color: var(--blue-bright); cursor: pointer; background: none; font-family: 'DM Sans', sans-serif;
+}
+.btn-package:hover { background: rgba(29,111,164,0.15); border-color: var(--blue-bright); }
+.package-card.featured .btn-package { background: var(--accent); color: var(--navy); border-color: var(--accent); }
+.package-card.featured .btn-package:hover { background: var(--accent-light); border-color: var(--accent-light); }
+
+/* ─── TRAINING PLANS PAGE ─── */
+.plans-note {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: rgba(29,111,164,0.1); border: 1px solid rgba(29,111,164,0.25);
+  border-radius: 8px; padding: 16px 22px;
+  font-size: 14px; color: var(--muted); margin-bottom: 56px;
+}
+.plans-note strong { color: var(--blue-bright); }
+
+.plans-category { margin-bottom: 56px; }
+.plans-category-title {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 20px;
+  padding-bottom: 12px; border-bottom: 1px solid var(--border);
+}
+.plans-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.plan-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 32px 28px;
+  transition: border-color 0.3s, transform 0.2s; position: relative; overflow: hidden;
+}
+.plan-card:hover { border-color: rgba(42,143,212,0.4); transform: translateY(-3px); }
+.plan-duration {
+  font-family: 'Bebas Neue', sans-serif; font-size: 48px;
+  color: rgba(255,255,255,0.05); line-height: 1;
+  position: absolute; top: 16px; right: 20px;
+}
+.plan-name { font-size: 17px; font-weight: 500; color: var(--white); margin-bottom: 8px; line-height: 1.3; }
+.plan-detail { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+.plan-price-row { display: flex; align-items: baseline; gap: 4px; margin-bottom: 20px; }
+.plan-price-num { font-family: 'Bebas Neue', sans-serif; font-size: 36px; color: var(--accent); line-height: 1; }
+.plan-price-curr { font-size: 16px; color: var(--muted); }
+.plan-price-label { font-size: 13px; color: var(--muted); }
+.plan-features { list-style: none; }
+.plan-features li {
+  display: flex; gap: 10px; font-size: 13px; color: var(--muted);
+  padding: 6px 0; border-bottom: 1px solid var(--border);
+}
+.plan-features li:last-child { border-bottom: none; }
+.plan-check { color: var(--blue-bright); flex-shrink: 0; }
+.btn-plan {
+  display: block; width: 100%; text-align: center;
+  margin-top: 24px; padding: 12px;
+  border-radius: 6px; border: 1px solid var(--border);
+  color: var(--muted); font-size: 13px; font-weight: 400;
+  transition: all 0.2s; cursor: pointer; background: none; font-family: 'DM Sans', sans-serif;
+}
+.btn-plan:hover { border-color: rgba(42,143,212,0.4); color: var(--blue-bright); background: rgba(42,143,212,0.06); }
+
+/* ─── CONTACT PAGE ─── */
+.contact-grid { display: grid; grid-template-columns: 1fr 1.3fr; gap: 80px; align-items: start; }
+.contact-method {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 22px 0; border-bottom: 1px solid var(--border);
+}
+.contact-method:last-of-type { border-bottom: none; }
+.contact-icon {
+  width: 44px; height: 44px; border-radius: 8px;
+  background: rgba(29,111,164,0.15); border: 1px solid rgba(29,111,164,0.25);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.contact-label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.contact-value { font-size: 15px; color: var(--white); }
+.contact-value a { color: var(--white); text-decoration: none; }
+.contact-value a:hover { color: var(--blue-bright); }
+.contact-form-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 40px; }
+.form-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--white); margin-bottom: 28px; }
+.form-group { margin-bottom: 18px; }
+label { display: block; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+input, textarea, select {
+  width: 100%; background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border); border-radius: 6px;
+  padding: 13px 16px; color: var(--white);
+  font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 300;
+  transition: border-color 0.2s; outline: none; -webkit-appearance: none;
+}
+input:focus, textarea:focus, select:focus { border-color: var(--blue-bright); }
+input::placeholder, textarea::placeholder { color: var(--muted); opacity: 0.5; }
+select option { background: var(--navy-mid); color: var(--white); }
+optgroup { background: var(--navy-mid); color: var(--muted); }
+textarea { resize: vertical; min-height: 100px; }
+.form-required { color: var(--accent); margin-left: 2px; }
+.form-optional { font-size: 11px; color: var(--muted); font-style: italic; margin-left: 4px; text-transform: none; letter-spacing: 0; }
+.btn-submit {
+  width: 100%; background: var(--accent); color: var(--navy);
+  border: none; padding: 16px; border-radius: 6px;
+  font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500;
+  cursor: pointer; letter-spacing: 0.5px; transition: background 0.2s, transform 0.15s; margin-top: 8px;
+}
+.btn-submit:hover { background: var(--accent-light); transform: translateY(-2px); }
+.form-note { font-size: 12px; color: var(--muted); text-align: center; margin-top: 14px; line-height: 1.6; }
+.success-msg {
+  display: none; background: rgba(42,143,212,0.12);
+  border: 1px solid rgba(42,143,212,0.3); border-radius: 8px;
+  padding: 24px; text-align: center; color: var(--blue-bright); font-size: 15px;
+}
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--navy); border-top: 1px solid var(--border);
+  padding: 36px 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 20px;
+}
+.footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--white); letter-spacing: 2px; cursor: pointer; }
+.footer-logo span { color: var(--accent); }
+.footer-copy { font-size: 13px; color: var(--muted); }
+.footer-links { display: flex; gap: 24px; }
+.footer-links a { font-size: 13px; color: var(--muted); text-decoration: none; cursor: pointer; transition: color 0.2s; }
+.footer-links a:hover { color: var(--white); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  nav { padding: 16px 20px; }
+  .nav-links { display: none; }
+  .page-section, .hero { padding: 60px 24px; }
+  .hero { padding-top: 40px; }
+  .hero-stats { gap: 24px; flex-wrap: wrap; margin-top: 48px; }
+  .about-grid { grid-template-columns: 1fr; gap: 40px; }
+  .packages-grid { grid-template-columns: 1fr; }
+  .plans-grid { grid-template-columns: 1fr; }
+  .steps { grid-template-columns: 1fr 1fr; }
+  .step::after { display: none; }
+  .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+  footer { flex-direction: column; text-align: center; padding: 28px 20px; }
+  .footer-links { justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" onclick="showPage('home')" style="cursor:pointer">COUCH<span>2</span>FINISHLINE</a>
+  <ul class="nav-links">
+    <li><a onclick="showPage('home')" data-page="home">Home</a></li>
+    <li><a onclick="showPage('about')" data-page="about">About Me</a></li>
+    <li class="nav-dropdown" id="coachingDropdown">
+      <a>Coaching</a>
+      <div class="dropdown-menu">
+        <a onclick="showPage('private')">Private Coaching</a>
+        <a onclick="showPage('plans')">Training Plans</a>
+      </div>
+    </li>
+    <li><a onclick="showPage('runtest')" data-page="runtest">Running Test</a></li>
+    <li><a onclick="showPage('contact')" data-page="contact" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     PAGE: HOME
+══════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-tag">Ironman Certified Coach · Triathlon & Running</div>
+    <h1>FROM<br>COUCH<br>TO <em>FINISH</em><br><em>LINE</em></h1>
+    <p class="hero-sub">Personal coaching for athletes at every level — whether you're crossing your first finish line or chasing a new personal best.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="showPage('private')">View Coaching Packages</button>
+      <button class="btn-secondary" onclick="showPage('contact')">Book Intro Call</button>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">100<span>%</span></div>
+        <div class="stat-label">Personalised plans</div>
+      </div>
+      <div>
+        <div class="stat-num">All</div>
+        <div class="stat-label">Levels welcome</div>
+      </div>
+      <div>
+        <div class="stat-num">3<span>+</span></div>
+        <div class="stat-label">Disciplines coached</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE: ABOUT ME
+══════════════════════════════════════════ -->
+<div class="page" id="page-about">
+  <div class="page-section">
+    <div class="section-tag">// About Me</div>
+    <h2>YOUR COACH</h2>
+    <div class="about-grid">
+      <div class="about-text">
+        <div class="about-badge">
+          <div class="about-badge-dot"></div>
+          <span class="about-badge-text">Ironman Certified Coach</span>
+        </div>
+        <p>I'm Cem K, an Ironman certified coach passionate about helping athletes of all levels achieve goals they once thought impossible — from completing a first 5K to crossing an Ironman finish line.</p>
+        <p>My coaching philosophy is simple: every athlete is different. I take the time to understand your life, your schedule and your goals before building a plan that is truly yours — then I adapt it every single week based on how you're progressing.</p>
+        <p>Whether you're a complete beginner or an experienced racer looking to break through a plateau, there is a place for you here. The finish line is closer than you think.</p>
+      </div>
+      <div class="about-visual">
+        <div class="cert-item">
+          <div class="cert-icon">🏅</div>
+          <div>
+            <div class="cert-title">Ironman Certified Coach</div>
+            <div class="cert-sub">Official certification from the Ironman coaching programme</div>
+          </div>
+        </div>
+        <div class="cert-item">
+          <div class="cert-icon">🏊</div>
+          <div>
+            <div class="cert-title">Triathlon Coaching</div>
+            <div class="cert-sub">Swim, bike & run — all three disciplines covered</div>
+          </div>
+        </div>
+        <div class="cert-item">
+          <div class="cert-icon">🏃</div>
+          <div>
+            <div class="cert-title">Running Coaching</div>
+            <div class="cert-sub">5K to marathon and everything in between</div>
+          </div>
+        </div>
+        <div class="cert-item">
+          <div class="cert-icon">📊</div>
+          <div>
+            <div class="cert-title">Data-driven approach</div>
+            <div class="cert-sub">Weekly feedback loops & continuous plan adjustments</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-section alt">
+    <div class="section-tag">// Process</div>
+    <h2>HOW IT WORKS</h2>
+    <p class="section-intro">Getting started is simple. Here's what happens after you reach out.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-title">Reach out</div>
+        <div class="step-desc">Fill in the contact form or send an email. Tell me about your goals and your current level.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-title">Intro call</div>
+        <div class="step-desc">We have a free introduction call to understand your goals, schedule and make sure we're a great fit.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-title">Your plan</div>
+        <div class="step-desc">I build your first week of training — tailored entirely to your goals, schedule and fitness level.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-title">Keep improving</div>
+        <div class="step-desc">Every week I collect your feedback and adjust the plan so you keep progressing, week after week.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE: PRIVATE COACHING
+══════════════════════════════════════════ -->
+<div class="page" id="page-private">
+  <div class="page-section">
+    <div class="section-tag">// Private Coaching</div>
+    <h2>PERSONALISED<br>COACHING</h2>
+    <p class="section-intro">Month-to-month coaching with a plan built entirely around you. Every plan starts with an introduction call and is adjusted weekly based on your feedback.</p>
+
+    <div class="packages-grid">
+
+      <!-- Card 1: Single Sport Standard -->
+      <div class="package-card">
+        <div class="package-sport">Single Sport: Run / Bike / Swim</div>
+        <div class="package-name">Standard Coaching</div>
+        <div class="package-price">
+          <span class="price-currency">€</span>
+          <span class="price-num">95</span>
+          <span class="price-period">/ month</span>
+        </div>
+        <ul class="package-features">
+          <li><div class="check">✓</div>Introduction call to assess level & goals</li>
+          <li><div class="check">✓</div>Fully tailored weekly training plan</li>
+          <li><div class="check">✓</div>Plan adjusted every week</li>
+          <li><div class="check">✓</div>Race strategy and nutrition plan for A race</li>
+          <li><div class="check">✓</div>Weekly feedback collection & review</li>
+          <li><div class="check">✓</div>Weekly WhatsApp communication</li>
+        </ul>
+        <button class="btn-package" onclick="showPage('contact')">Get Started</button>
+      </div>
+
+      <!-- Card 2: Triathlon Standard -->
+      <div class="package-card">
+        <div class="package-sport">Triathlon</div>
+        <div class="package-name">Standard Coaching</div>
+        <div class="package-price">
+          <span class="price-currency">€</span>
+          <span class="price-num">120</span>
+          <span class="price-period">/ month</span>
+        </div>
+        <ul class="package-features">
+          <li><div class="check">✓</div>Introduction call to assess level & goals</li>
+          <li><div class="check">✓</div>Fully tailored weekly training plan</li>
+          <li><div class="check">✓</div>Plan adjusted every week</li>
+          <li><div class="check">✓</div>Race strategy and nutrition plan for A race</li>
+          <li><div class="check">✓</div>Weekly feedback collection & review</li>
+          <li><div class="check">✓</div>Weekly WhatsApp communication</li>
+        </ul>
+        <button class="btn-package" onclick="showPage('contact')">Get Started</button>
+      </div>
+
+      <!-- Card 3: Triathlon Premium -->
+      <div class="package-card featured">
+        <div class="featured-label">Most Popular</div>
+        <div class="package-sport">Triathlon</div>
+        <div class="package-name">Premium Coaching</div>
+        <div class="package-price">
+          <span class="price-currency">€</span>
+          <span class="price-num">155</span>
+          <span class="price-period">/ month</span>
+        </div>
+        <ul class="package-features">
+          <li><div class="check">✓</div>Introduction call to assess level & goals</li>
+          <li><div class="check">✓</div>Fully tailored weekly training plan</li>
+          <li><div class="check">✓</div>Plan adjusted every week</li>
+          <li><div class="check">✓</div>Race strategy and nutrition plan for up to three races</li>
+          <li><div class="check">✓</div>Weekly feedback collection & review</li>
+          <li><div class="check">✓</div>Weekly WhatsApp communication</li>
+          <li><div class="check">✓</div>Monthly 1-on-1 video call</li>
+          <li><div class="check">✓</div>Detailed training and race analysis</li>
+        </ul>
+        <button class="btn-package" onclick="showPage('contact')">Get Started</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE: TRAINING PLANS
+══════════════════════════════════════════ -->
+<div class="page" id="page-plans">
+  <div class="page-section">
+    <div class="section-tag">// Training Plans</div>
+    <h2>GOAL-BASED<br>TRAINING PLANS</h2>
+    <p class="section-intro">Pre-built 12-week programmes designed around a specific race goal. Buy the plan, follow it, and cross that finish line. No ongoing coaching interaction included.</p>
+
+    <div class="plans-note">
+      <span>ℹ</span>
+      <span><strong>Self-guided:</strong> These are structured programmes you follow independently. No weekly check-ins or plan adjustments — perfect if you prefer autonomy and already have a clear goal.</span>
+    </div>
+
+    <!-- Running / Single Sport -->
+    <div class="plans-category">
+      <div class="plans-category-title">// Single Sport: Run / Bike / Swim</div>
+      <div class="plans-grid" style="grid-template-columns: repeat(2,1fr);">
+
+        <div class="plan-card">
+          <div class="plan-duration">12W</div>
+          <div class="plan-name">Single Sport: Run / Bike / Swim</div>
+          <div class="plan-detail">12-week structured programme</div>
+          <div class="plan-price-row">
+            <span class="plan-price-curr">€</span>
+            <span class="plan-price-num">90</span>
+            <span class="plan-price-label">&nbsp;one-off</span>
+          </div>
+          <ul class="plan-features">
+            <li><span class="plan-check">✓</span> 12 weeks of structured sessions</li>
+            <li><span class="plan-check">✓</span> Suitable for all distances</li>
+            <li><span class="plan-check">✓</span> Applicable for all levels</li>
+            <li><span class="plan-check">✓</span> Instant digital delivery</li>
+          </ul>
+          <button class="btn-plan" onclick="showPage('contact')">Buy Plan →</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Triathlon -->
+    <div class="plans-category">
+      <div class="plans-category-title">// Triathlon</div>
+      <div class="plans-grid">
+
+        <div class="plan-card">
+          <div class="plan-duration">12W</div>
+          <div class="plan-name">Sprint or Olympic Distance</div>
+          <div class="plan-detail">12-week triathlon programme</div>
+          <div class="plan-price-row">
+            <span class="plan-price-curr">€</span>
+            <span class="plan-price-num">120</span>
+            <span class="plan-price-label">&nbsp;one-off</span>
+          </div>
+          <ul class="plan-features">
+            <li><span class="plan-check">✓</span> Swim, bike & run sessions</li>
+            <li><span class="plan-check">✓</span> Sprint & Olympic distance ready</li>
+            <li><span class="plan-check">✓</span> Applicable for all levels</li>
+            <li><span class="plan-check">✓</span> Instant digital delivery</li>
+          </ul>
+          <button class="btn-plan" onclick="showPage('contact')">Buy Plan →</button>
+        </div>
+
+        <div class="plan-card">
+          <div class="plan-duration">12W</div>
+          <div class="plan-name">Middle or Full Distance</div>
+          <div class="plan-detail">12-week long-distance programme</div>
+          <div class="plan-price-row">
+            <span class="plan-price-curr">€</span>
+            <span class="plan-price-num">150</span>
+            <span class="plan-price-label">&nbsp;one-off</span>
+          </div>
+          <ul class="plan-features">
+            <li><span class="plan-check">✓</span> Swim, bike & run sessions</li>
+            <li><span class="plan-check">✓</span> 70.3 & Ironman distance ready</li>
+            <li><span class="plan-check">✓</span> Applicable for all levels</li>
+            <li><span class="plan-check">✓</span> Instant digital delivery</li>
+          </ul>
+          <button class="btn-plan" onclick="showPage('contact')">Buy Plan →</button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE: RUNNING TEST
+══════════════════════════════════════════ -->
+<div class="page" id="page-runtest">
+  <div class="page-section">
+    <div class="section-tag">// Running Test</div>
+    <h2>RUNNING<br>TEST</h2>
+    <p class="section-intro">Before we start training together, it helps to understand where you are right now. A short running test gives us a clear, objective baseline — so we can train smarter, set realistic goals and most importantly, keep you healthy and injury-free.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:64px;">
+
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:36px;">
+        <div style="font-size:32px;margin-bottom:16px;">🛡️</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--white);margin-bottom:12px;">Injury Prevention</div>
+        <p style="font-size:15px;color:var(--muted);line-height:1.8;">Training hard is only effective if you stay healthy. The running test helps identify your current limits so we can build your load progressively and keep you away from overuse injuries.</p>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:36px;">
+        <div style="font-size:32px;margin-bottom:16px;">🗣️</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--white);margin-bottom:12px;">A Shared Language</div>
+        <p style="font-size:15px;color:var(--muted);line-height:1.8;">Good coaching requires clear communication. The test establishes a mutual training language between us — so when I say "easy run" or "hard effort", we both know exactly what that means for your body.</p>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:36px;">
+        <div style="font-size:32px;margin-bottom:16px;">🎯</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--white);margin-bottom:12px;">Personalised Zones</div>
+        <p style="font-size:15px;color:var(--muted);line-height:1.8;">Every athlete is different. The test allows me to define your personal training zones so every session — easy, moderate or hard — is calibrated precisely to your physiology.</p>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:36px;">
+        <div style="font-size:32px;margin-bottom:16px;">📈</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--white);margin-bottom:12px;">Track Your Progress</div>
+        <p style="font-size:15px;color:var(--muted);line-height:1.8;">By repeating the test periodically throughout our coaching journey, we can objectively measure your improvement — not just feel it. Numbers don't lie.</p>
+      </div>
+
+    </div>
+
+    <div style="background:rgba(232,160,32,0.06);border:1px solid rgba(232,160,32,0.25);border-radius:12px;padding:40px;text-align:center;">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--white);margin-bottom:12px;">Ready to find your baseline?</div>
+      <p style="font-size:16px;color:var(--muted);max-width:480px;margin:0 auto 28px;line-height:1.8;">The test is simple, takes less than 30 minutes, and can be done anywhere. Get in touch and I'll guide you through everything.</p>
+      <button class="btn-primary" onclick="showPage('contact')">Get in Touch →</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE: CONTACT
+══════════════════════════════════════════ -->
+<div class="page" id="page-contact">
+  <div class="page-section">
+    <div class="section-tag">// Contact</div>
+    <h2>LET'S GET<br>STARTED</h2>
+    <div class="contact-grid">
+
+      <div>
+        <p style="color:var(--muted);font-size:16px;line-height:1.8;margin-bottom:40px;">Ready to take the first step? Reach out via email, phone, or fill in the form and you will receive a response soon.</p>
+        <div class="contact-method">
+          <div class="contact-icon">✉</div>
+          <div>
+            <div class="contact-label">Email</div>
+            <div class="contact-value"><a href="mailto:info@couchtofinishline.com">info@couchtofinishline.com</a></div>
+          </div>
+        </div>
+        <div class="contact-method">
+          <div class="contact-icon" style="background:rgba(37,211,102,0.15);border-color:rgba(37,211,102,0.3);">📱</div>
+          <div>
+            <div class="contact-label">Phone / WhatsApp</div>
+            <div class="contact-value">
+              <a href="tel:+31610010010">+31 6 10 01 00 10</a><br>
+              <span style="font-size:13px;color:var(--muted);margin-top:4px;display:block;">Need a quick response? Don't hesitate to reach out via <a href="https://wa.me/31610010010" target="_blank" style="color:#25d366;text-decoration:none;font-weight:500;">WhatsApp</a> — it's the fastest way to reach me.</span>
+            </div>
+          </div>
+        </div>
+        <div class="contact-method">
+          <div class="contact-icon">🕐</div>
+          <div>
+            <div class="contact-label">Response time</div>
+            <div class="contact-value">You will receive a response soon</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-form-wrap">
+        <div class="form-title">Send a Message</div>
+        <form id="contactForm" action="https://formspree.io/f/mgoqgddz" method="POST" >
+          <div class="form-group">
+            <label>Your name <span class="form-required">*</span></label>
+            <input type="text" name="name" placeholder="Jane Smith" required>
+          </div>
+          <div class="form-group">
+            <label>Email address <span class="form-required">*</span></label>
+            <input type="email" name="email" placeholder="jane@example.com" required>
+          </div>
+          <div class="form-group">
+            <label>Phone number <span class="form-optional">(optional)</span></label>
+            <input type="tel" name="phone" placeholder="+31 6 12 34 56 78">
+          </div>
+          <div class="form-group">
+            <label>I'm interested in <span class="form-required">*</span></label>
+            <select name="interest" required>
+              <option value="" disabled selected>Select an option…</option>
+              <optgroup label="Private Coaching">
+                <option value="single-standard">Single Sport: Run / Bike / Swim — €95/month</option>
+                <option value="tri-standard">Triathlon Standard Coaching — €120/month</option>
+                <option value="tri-premium">Triathlon Premium Coaching — €155/month</option>
+              </optgroup>
+              <optgroup label="Training Plans">
+                <option value="plan-running">Single Sport: Run / Bike / Swim Plan — €90</option>
+                <option value="plan-sprint-olympic">Triathlon Sprint / Olympic Distance Plan — €120</option>
+                <option value="plan-long">Triathlon Middle / Full Distance Plan — €150</option>
+              </optgroup>
+              <option value="other">Not sure yet — just exploring</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Tell me about your goals <span class="form-optional">(optional)</span></label>
+            <textarea name="message" placeholder="e.g. I'm training for my first Olympic triathlon in September and I'm looking for help structuring my training…"></textarea>
+          </div>
+          <button type="submit" class="btn-submit">Send Message →</button>
+          <p class="form-note">Your message goes directly to info@couchtofinishline.com. You will receive a response soon.</p>
+        </form>
+        <div class="success-msg" id="successMsg">
+          ✓ Message sent! You will receive a response soon.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo" onclick="showPage('home')">COUCH<span>2</span>FINISHLINE</div>
+  <div class="footer-copy">© 2025 Couch2FinishLine</div>
+  <div class="footer-links">
+    <a onclick="showPage('about')">About</a>
+    <a onclick="showPage('private')">Coaching</a>
+    <a onclick="showPage('plans')">Plans</a>
+    <a onclick="showPage('runtest')">Running Test</a>
+    <a onclick="showPage('contact')">Contact</a>
+  </div>
+</footer>
+
+<script>
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.querySelectorAll('.nav-links a[data-page]').forEach(a => {
+    a.classList.toggle('active', a.dataset.page === id);
+  });
+  document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+}
+
+// Click-toggle dropdown
+let dropdownTimer = null;
+document.querySelectorAll('.nav-dropdown > a').forEach(trigger => {
+  trigger.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const dropdown = this.closest('.nav-dropdown');
+    const isOpen = dropdown.classList.contains('open');
+    document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+    if (!isOpen) dropdown.classList.add('open');
+  });
+});
+
+// Close dropdown on mouseleave with small delay so user can move to menu items
+document.querySelectorAll('.nav-dropdown').forEach(dropdown => {
+  dropdown.addEventListener('mouseenter', function() {
+    clearTimeout(dropdownTimer);
+  });
+  dropdown.addEventListener('mouseleave', function() {
+    const d = this;
+    dropdownTimer = setTimeout(function() {
+      d.classList.remove('open');
+    }, 200);
+  });
+});
+
+// Close dropdown when clicking anywhere else
+document.addEventListener('click', function() {
+  document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+});
+
+// ─── Form validation with inline error messages ───
+function showError(input, message) {
+  clearError(input);
+  input.style.borderColor = '#e05252';
+  const err = document.createElement('p');
+  err.className = 'field-error';
+  err.style.cssText = 'color:#e05252;font-size:12px;margin-top:6px;';
+  err.textContent = message;
+  input.parentNode.appendChild(err);
+}
+function clearError(input) {
+  input.style.borderColor = '';
+  const existing = input.parentNode.querySelector('.field-error');
+  if (existing) existing.remove();
+}
+function validateEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+// Handle form submission via Formspree
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const form = document.getElementById('contactForm');
+  const success = document.getElementById('successMsg');
+  const btn = form.querySelector('.btn-submit');
+
+  // Clear previous errors
+  form.querySelectorAll('input, textarea, select').forEach(f => clearError(f));
+
+  // Validate
+  let valid = true;
+  const nameInput = form.querySelector('[name="name"]');
+  const emailInput = form.querySelector('[name="email"]');
+  const interestInput = form.querySelector('[name="interest"]');
+
+  if (!nameInput.value.trim()) {
+    showError(nameInput, 'Please enter your name.');
+    valid = false;
+  }
+  if (!emailInput.value.trim()) {
+    showError(emailInput, 'Please enter your email address.');
+    valid = false;
+  } else if (!validateEmail(emailInput.value.trim())) {
+    showError(emailInput, 'That doesn\'t look like a valid email address. Please check and try again.');
+    valid = false;
+  }
+  if (!interestInput.value) {
+    showError(interestInput, 'Please select an option so I know how to help you.');
+    valid = false;
+  }
+  if (!valid) return;
+
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+  try {
+    const response = await fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    });
+    if (response.ok) {
+      form.style.display = 'none';
+      success.style.display = 'block';
+    } else {
+      btn.textContent = 'Something went wrong — try again';
+      btn.disabled = false;
+    }
+  } catch {
+    btn.textContent = 'Something went wrong — try again';
+    btn.disabled = false;
+  }
+});
+
+// Clear errors on input
+document.getElementById('contactForm').querySelectorAll('input, textarea, select').forEach(field => {
+  field.addEventListener('input', function() { clearError(this); });
+  field.addEventListener('change', function() { clearError(this); });
+});
+</script>
+</body>
+</html>
