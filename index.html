@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Couch2FinishLine — Triathlon & Running Coaching by Cem K</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 500'%3E%3Ccircle cx='250' cy='250' r='250' fill='%230a1628'/%3E%3Ccircle cx='250' cy='250' r='232' fill='none' stroke='%23e8a020' stroke-width='7'/%3E%3Ctext x='250' y='262' text-anchor='middle' font-family='Arial Black,Arial,sans-serif' font-weight='900' font-size='34' fill='%23f5f7fa' letter-spacing='2'%3ECOUCH%3Ctspan fill='%23e8a020'%3E2%3C/tspan%3EFINISHLINE%3C/text%3E%3Ctext x='250' y='305' text-anchor='middle' font-family='Arial,sans-serif' font-size='16' fill='%238ca0bc' letter-spacing='4'%3EPERSONAL COACHING%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -440,6 +441,7 @@ footer {
       </div>
     </li>
     <li><a onclick="showPage('runtest')" data-page="runtest">Running Test</a></li>
+    <li><a onclick="showPage('nutrition')" data-page="nutrition">Nutrition</a></li>
     <li><a onclick="showPage('contact')" data-page="contact" class="nav-cta">Contact</a></li>
   </ul>
 </nav>
@@ -765,6 +767,136 @@ footer {
 </div>
 
 <!-- ══════════════════════════════════════════
+     PAGE: NUTRITION CALCULATOR
+══════════════════════════════════════════ -->
+<div class="page" id="page-nutrition">
+  <div class="page-section">
+    <div class="section-tag">// Nutrition Calculator</div>
+    <h2>FUEL YOUR<br>PERFORMANCE</h2>
+    <p class="section-intro">Type in a meal or ingredient and instantly see the nutritional breakdown. Designed to help endurance athletes understand what they're putting in their body — before or after training.</p>
+
+    <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:start;">
+
+      <!-- Input panel -->
+      <div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:36px;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--white);margin-bottom:8px;">What did you eat?</div>
+          <p style="font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.7;">Enter a meal, ingredient or full recipe. Be specific with quantities for better accuracy.</p>
+
+          <div style="margin-bottom:16px;">
+            <label style="display:block;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Meal or ingredient</label>
+            <textarea id="nutritionInput" rows="4" placeholder="e.g. 100g oats, 1 banana, 2 boiled eggs and a glass of orange juice"
+              style="width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:6px;padding:14px 16px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:300;outline:none;resize:vertical;transition:border-color 0.2s;"
+              onfocus="this.style.borderColor='var(--blue-bright)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+          </div>
+
+          <div style="margin-bottom:20px;">
+            <label style="display:block;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Number of servings</label>
+            <input type="number" id="servingsInput" value="1" min="1" max="10"
+              style="width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:6px;padding:13px 16px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:300;outline:none;transition:border-color 0.2s;"
+              onfocus="this.style.borderColor='var(--blue-bright)'" onblur="this.style.borderColor='var(--border)'">
+          </div>
+
+          <button onclick="analyseNutrition()" id="nutritionBtn"
+            style="width:100%;background:var(--accent);color:var(--navy);border:none;padding:16px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:background 0.2s;">
+            Analyse Nutrition →
+          </button>
+
+          <div id="nutritionError" style="display:none;margin-top:14px;padding:12px 16px;background:rgba(224,82,82,0.1);border:1px solid rgba(224,82,82,0.3);border-radius:6px;font-size:13px;color:#e05252;"></div>
+
+          <!-- Example meals -->
+          <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border);">
+            <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">Try an example</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+              <button onclick="setExample('100g oats, 1 banana, 250ml whole milk')" style="font-size:12px;padding:6px 12px;border-radius:100px;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--blue-bright)';this.style.color='var(--white)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">🥣 Pre-ride breakfast</button>
+              <button onclick="setExample('200g chicken breast, 150g white rice, 100g broccoli')" style="font-size:12px;padding:6px 12px;border-radius:100px;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--blue-bright)';this.style.color='var(--white)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">🍗 Post-run meal</button>
+              <button onclick="setExample('1 maurten energy gel, 500ml sports drink, 1 banana')" style="font-size:12px;padding:6px 12px;border-radius:100px;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--blue-bright)';this.style.color='var(--white)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">⚡ Race fuelling</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results panel -->
+      <div id="nutritionResults" style="display:none;">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:36px;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--white);margin-bottom:20px;">Nutritional Breakdown</div>
+
+          <!-- Macro cards -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
+            <div style="background:rgba(232,160,32,0.08);border:1px solid rgba(232,160,32,0.25);border-radius:10px;padding:20px;text-align:center;">
+              <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:6px;">Calories</div>
+              <div id="resCalories" style="font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--white);line-height:1;">—</div>
+              <div style="font-size:12px;color:var(--muted);">kcal</div>
+            </div>
+            <div style="background:rgba(29,111,164,0.08);border:1px solid rgba(29,111,164,0.25);border-radius:10px;padding:20px;text-align:center;">
+              <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--blue-bright);margin-bottom:6px;">Protein</div>
+              <div id="resProtein" style="font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--white);line-height:1;">—</div>
+              <div style="font-size:12px;color:var(--muted);">grams</div>
+            </div>
+            <div style="background:rgba(29,111,164,0.08);border:1px solid rgba(29,111,164,0.25);border-radius:10px;padding:20px;text-align:center;">
+              <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--blue-bright);margin-bottom:6px;">Carbohydrates</div>
+              <div id="resCarbs" style="font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--white);line-height:1;">—</div>
+              <div style="font-size:12px;color:var(--muted);">grams</div>
+            </div>
+            <div style="background:rgba(29,111,164,0.08);border:1px solid rgba(29,111,164,0.25);border-radius:10px;padding:20px;text-align:center;">
+              <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--blue-bright);margin-bottom:6px;">Fat</div>
+              <div id="resFat" style="font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--white);line-height:1;">—</div>
+              <div style="font-size:12px;color:var(--muted);">grams</div>
+            </div>
+          </div>
+
+          <!-- Extra nutrients -->
+          <div id="extraNutrients" style="border-top:1px solid var(--border);padding-top:16px;">
+            <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">More details</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+              <div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--border);">
+                <span style="color:var(--muted);">Fibre</span><span id="resFibre" style="color:var(--white);">—</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--border);">
+                <span style="color:var(--muted);">Sugar</span><span id="resSugar" style="color:var(--white);">—</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--border);">
+                <span style="color:var(--muted);">Sodium</span><span id="resSodium" style="color:var(--white);">—</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--border);">
+                <span style="color:var(--muted);">Cholesterol</span><span id="resCholesterol" style="color:var(--white);">—</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Coach tip -->
+          <div id="coachTip" style="margin-top:20px;background:rgba(232,160,32,0.06);border:1px solid rgba(232,160,32,0.2);border-radius:8px;padding:16px;">
+            <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:6px;">Coach's note</div>
+            <div id="coachTipText" style="font-size:13px;color:var(--muted);line-height:1.6;"></div>
+          </div>
+
+          <p style="font-size:11px;color:var(--muted);margin-top:16px;line-height:1.6;opacity:0.7;">Data powered by Edamam. Values are estimates and may vary. Always consult a qualified nutritionist for personalised dietary advice.</p>
+        </div>
+      </div>
+
+      <!-- Placeholder when no results yet -->
+      <div id="nutritionPlaceholder" style="display:flex;align-items:center;justify-content:center;height:100%;">
+        <div style="text-align:center;padding:40px;">
+          <div style="font-size:56px;margin-bottom:16px;">🥗</div>
+          <div style="font-size:16px;color:var(--muted);line-height:1.7;">Enter a meal on the left<br>and your nutritional breakdown<br>will appear here.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Disclaimer -->
+    <div style="margin-top:48px;background:rgba(29,111,164,0.08);border:1px solid rgba(29,111,164,0.2);border-radius:10px;padding:24px 28px;display:flex;gap:16px;align-items:flex-start;">
+      <span style="font-size:22px;flex-shrink:0;">💡</span>
+      <div>
+        <div style="font-size:14px;font-weight:500;color:var(--white);margin-bottom:6px;">Want personalised nutrition guidance?</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.7;">This tool gives you a snapshot, but every athlete's needs are different. As part of my coaching packages, we build a nutrition strategy around your training load, race calendar and goals. <a onclick="showPage('contact')" style="color:var(--blue-bright);cursor:pointer;text-decoration:none;">Get in touch to find out more →</a></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
      PAGE: CONTACT
 ══════════════════════════════════════════ -->
 <div class="page" id="page-contact">
@@ -788,7 +920,7 @@ footer {
             <div class="contact-label">Phone / WhatsApp</div>
             <div class="contact-value">
               <a href="tel:+31649965195">+31 6 49 96 51 95</a><br>
-              <span style="font-size:13px;color:var(--muted);margin-top:4px;display:block;">Need a quick response? Don't hesitate to reach out via <a href="https://wa.me/31610010010" target="_blank" style="color:#25d366;text-decoration:none;font-weight:500;">WhatsApp</a> — it's the fastest way to reach me.</span>
+              <span style="font-size:13px;color:var(--muted);margin-top:4px;display:block;">Need a quick response? Don't hesitate to reach out via <a href="https://wa.me/31649965195" target="_blank" style="color:#25d366;text-decoration:none;font-weight:500;">WhatsApp</a> — it's the fastest way to reach me.</span>
             </div>
           </div>
         </div>
@@ -821,16 +953,19 @@ footer {
             <select name="interest" required>
               <option value="" disabled selected>Select an option…</option>
               <optgroup label="Private Coaching">
-                <option value="single-standard">Single Sport: Run / Bike / Swim — €95/month</option>
-                <option value="tri-standard">Triathlon Standard Coaching — €120/month</option>
-                <option value="tri-premium">Triathlon Premium Coaching — €155/month</option>
+                <option value="single-standard">Single Sport: Run / Bike / Swim</option>
+                <option value="tri-standard">Triathlon Standard Coaching</option>
+                <option value="tri-premium">Triathlon Premium Coaching</option>
               </optgroup>
               <optgroup label="Training Plans">
-                <option value="plan-running">Single Sport: Run / Bike / Swim Plan — €90</option>
-                <option value="plan-sprint-olympic">Triathlon Sprint / Olympic Distance Plan — €120</option>
-                <option value="plan-long">Triathlon Middle / Full Distance Plan — €150</option>
+                <option value="plan-running">Single Sport: Run / Bike / Swim Plan</option>
+                <option value="plan-sprint-olympic">Triathlon Sprint / Olympic Distance Plan</option>
+                <option value="plan-long">Triathlon Middle / Full Distance Plan</option>
               </optgroup>
-              <option value="other">Not sure yet — just exploring</option>
+              <optgroup label="Other">
+                <option value="running-test">Running Test</option>
+                <option value="other">Not sure yet — just exploring</option>
+              </optgroup>
             </select>
           </div>
           <div class="form-group">
@@ -858,6 +993,7 @@ footer {
     <a onclick="showPage('private')">Coaching</a>
     <a onclick="showPage('plans')">Plans</a>
     <a onclick="showPage('runtest')">Running Test</a>
+    <a onclick="showPage('nutrition')">Nutrition</a>
     <a onclick="showPage('contact')">Contact</a>
   </div>
 </footer>
@@ -903,7 +1039,94 @@ document.addEventListener('click', function() {
   document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
 });
 
-// ─── Form validation with inline error messages ───
+// ─── Nutrition Calculator ───
+const EDAMAM_APP_ID = '3dc4ef76';
+const EDAMAM_APP_KEY = '435cc1adf42b27e63e2ebf7ecadf461f';
+
+function setExample(text) {
+  document.getElementById('nutritionInput').value = text;
+  document.getElementById('nutritionInput').focus();
+}
+
+function getCoachTip(calories, protein, carbs, fat) {
+  if (carbs > 60) return 'High in carbohydrates — great for fuelling a long ride or run. Consider timing this 2–3 hours before your session for optimal energy.';
+  if (protein > 30) return 'Excellent protein content — ideal for post-training recovery. Aim to eat within 30–60 minutes after your session for best muscle repair.';
+  if (calories < 300) return 'This is a light meal or snack. Good for a quick top-up between sessions, but make sure your main meals cover your full training energy needs.';
+  if (fat > 25) return 'Higher in fat — better suited for easy recovery days or rest days rather than pre-training fuelling. Fat takes longer to digest.';
+  return 'A well-balanced meal for an endurance athlete. Consistent nutrition like this across your training week builds a strong performance foundation.';
+}
+
+async function analyseNutrition() {
+  const input = document.getElementById('nutritionInput').value.trim();
+  const servings = parseInt(document.getElementById('servingsInput').value) || 1;
+  const btn = document.getElementById('nutritionBtn');
+  const errorDiv = document.getElementById('nutritionError');
+
+  errorDiv.style.display = 'none';
+
+  if (!input) {
+    errorDiv.textContent = 'Please enter a meal or ingredient before analysing.';
+    errorDiv.style.display = 'block';
+    return;
+  }
+
+  btn.textContent = 'Analysing…';
+  btn.disabled = true;
+
+  // Build ingredient lines
+  const ingredients = input.split(',').map(i => i.trim()).filter(Boolean);
+
+  const body = {
+    title: 'Meal',
+    ingr: ingredients,
+    yield: servings
+  };
+
+  try {
+    const response = await fetch(
+      `https://api.edamam.com/api/nutrition-details?app_id=${EDAMAM_APP_ID}&app_key=${EDAMAM_APP_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Could not analyse this meal. Try being more specific — e.g. "100g chicken breast" instead of "chicken".');
+    }
+
+    const data = await response.json();
+    const n = data.totalNutrients;
+    const s = servings;
+
+    const get = (key) => n[key] ? Math.round(n[key].quantity / s) : 0;
+    const getUnit = (key, unit) => n[key] ? `${Math.round(n[key].quantity / s)}${unit}` : '—';
+
+    document.getElementById('resCalories').textContent = Math.round(data.calories / s);
+    document.getElementById('resProtein').textContent = get('PROCNT');
+    document.getElementById('resCarbs').textContent = get('CHOCDF');
+    document.getElementById('resFat').textContent = get('FAT');
+    document.getElementById('resFibre').textContent = getUnit('FIBTG', 'g');
+    document.getElementById('resSugar').textContent = getUnit('SUGAR', 'g');
+    document.getElementById('resSodium').textContent = getUnit('NA', 'mg');
+    document.getElementById('resCholesterol').textContent = getUnit('CHOLE', 'mg');
+
+    document.getElementById('coachTipText').textContent = getCoachTip(
+      Math.round(data.calories / s), get('PROCNT'), get('CHOCDF'), get('FAT')
+    );
+
+    document.getElementById('nutritionPlaceholder').style.display = 'none';
+    document.getElementById('nutritionResults').style.display = 'block';
+
+  } catch (err) {
+    errorDiv.textContent = err.message || 'Something went wrong. Please try again.';
+    errorDiv.style.display = 'block';
+  }
+
+  btn.textContent = 'Analyse Nutrition →';
+  btn.disabled = false;
+}
 function showError(input, message) {
   clearError(input);
   input.style.borderColor = '#e05252';
